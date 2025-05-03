@@ -8,8 +8,18 @@
             <button class ="text-green-800 font-bold py-[6px] px-4 rounded-lg cursor-pointer">Compare</button>
         </form>
     </div>
-    <div>
-        <a href="{{route('register')}}" class="btn-primary">SignUp</a>
-        <a href="{{route('login')}}" class="btn-secondary">Login</a>
+    <div class="flex gap-2 items-center">
+       @if (!Auth::user())
+             <a href="{{route('register')}}" class="btn-primary">SignUp</a>
+            <a href="{{route('login')}}" class="btn-secondary">Login</a>
+
+        @else
+
+             <form action="{{route('logout')}}  " method="post">
+                  @csrf
+                 <button class="bg-red-600 text-white px-2 py-1 rounded-lg">Logout</button>
+
+             </form>
+       @endif
     </div>
 </nav>
