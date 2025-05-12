@@ -16,8 +16,9 @@ class PageController extends Controller
     public function home()
     {
         $offer_products = Product::where('stock',true)->where('discount','>',0)->get();
+        $all_products = Product::where('stock',true)->get();
         $shop_profiles = ShopProfile::all();
-        return view('frontend.home', compact('offer_products','shop_profiles'));
+        return view('frontend.home', compact('offer_products','shop_profiles','all_products'));
     }
     public function store_request(Request $request)
     {

@@ -28,6 +28,16 @@
         </div>
 
     </section>
+
+    <section class="py-10">
+        <h2 class="container font-bold secondary text-2xl">Our Products</h2>
+        <div class="container grid grid-cols-3 gap-4 py-5">
+            @foreach ($all_products as $product)
+            <x-product-card :product="$product"/>
+            @endforeach
+        </div>
+
+    </section>
    <section>
     <div class="container text-center py-20" >
 
