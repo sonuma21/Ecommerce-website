@@ -314,17 +314,22 @@
 
                             <div class="product-count">
                                 <label for="size">Quantity</label>
-                                <form action="#" class="display-flex">
-                                    <div class="qtyminus">-</div>
-                                    <input type="text" name="quantity" value="1" class="qty">
-                                    <div class="qtyplus">+</div>
+                                <form action="{{route('add_to_cart')}}" method="POST">
+                                    @csrf
+                                    <input type="text" name="product_id" value="{{$product->id}}" hidden>
+                                    <div class="display-flex">
+                                        <div class="qtyminus">-</div>
+                                        <input type="text" name="quantity" value="1" class="qty">
+                                        <div class="qtyplus">+</div>
+                                    </div>
+                                    <button type="submit" class="round-black-btn">Add to Cart</button>
                                 </form>
-                                <a href="#" class="round-black-btn">Add to Cart</a>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
         <script>

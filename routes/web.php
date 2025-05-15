@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Models\User;
@@ -20,6 +21,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/carts', [CartController::class, 'carts'])->name('carts');
+    Route::post('/add-to-cart',[CartController::class,'add_to_cart'])->name('add_to_cart');
+
 });
 
 require __DIR__.'/auth.php';

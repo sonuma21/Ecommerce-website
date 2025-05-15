@@ -14,7 +14,9 @@
             <a href="{{route('login')}}" class="btn-secondary">Login</a>
 
         @else
-
+                    <a href="{{route('carts')}}">
+                    <button class="bg-orange-500 text-white px-2 py-1 rounded-lg">Carts</button>
+                    </a>
              <form action="{{route('logout')}}  " method="post">
                   @csrf
                  <button class="bg-red-600 text-white px-2 py-1 rounded-lg">Logout</button>
