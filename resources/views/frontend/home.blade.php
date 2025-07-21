@@ -1,7 +1,7 @@
 <x-frontend-layout>
-    <section>
-        <div class="">
-            <img class="h-[400px] w-full" src="https://img.lazcdn.com/us/domino/4f59e7a4-9054-4253-83e0-eaf337bd2658_NP-1976-688.jpg_2200x2200q80.jpg_.webp" alt="img">
+    <section class="bg-[var(--pink)]">
+        <div class="container py-10">
+            <img class="h-[500px] rounded-lg w-full" src="{{Storage::url('public/hero.jpg')}}" alt="img">
         </div>
     </section>
     <section>

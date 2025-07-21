@@ -1,9 +1,10 @@
 :root{
     --primary-color:#ff6600;
-    --light-primary-color:#163530;
+    --light-primary-color:#f7e166;
     --text-color:#848484;
     --secondary-color:#4fa14d;
     --dark-secondary-color:#274c30;
+    --pink:#ddc6e4;
 }
 .container{
     width: 86%;

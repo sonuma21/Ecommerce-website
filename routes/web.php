@@ -23,6 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/carts', [CartController::class, 'carts'])->name('carts');
     Route::post('/add-to-cart',[CartController::class,'add_to_cart'])->name('add_to_cart');
+    Route::put('/update-quantity',[CartController::class,'updateQuantity'])->name('carts.updateQuantity');
+    Route::delete('/carts/{id}',[CartController::class,'delete'])->name('carts.delete');
 
 });
 
