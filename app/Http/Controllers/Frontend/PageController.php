@@ -15,17 +15,17 @@ class PageController extends Controller
 {
     public function home()
     {
-        $offer_products = Product::where('stock',true)->where('discount','>',0)->get();
-        $all_products = Product::where('stock',true)->get();
+        $offer_products = Product::where('stock', true)->where('discount', '>', 0)->get();
+        $all_products = Product::where('stock', true)->get();
         $shop_profiles = ShopProfile::all();
-        return view('frontend.home', compact('offer_products','shop_profiles','all_products'));
+        return view('frontend.home', compact('offer_products', 'shop_profiles', 'all_products'));
     }
     public function store_request(Request $request)
     {
         $shop = new Shop();
         $shop->name = $request->name;
         $shop->email = $request->email;
-        $shop->password = Hash::make(rand(10000,99999));
+        $shop->password = Hash::make(rand(10000, 99999));
         $shop->save();
 
         $profile = new ShopProfile();
@@ -35,27 +35,27 @@ class PageController extends Controller
         $profile->save();
         Mail::to('phangmalmb@gmail.com')->send(new EmailNotification());
 
-        toast("Request sent Successfully","success" );
+        toast("Request sent Successfully", "success");
         return redirect()->route('home');
-
-
-
     }
 
-    public function compare(Request $request){
+    public function compare(Request $request)
+    {
         $q = $request->q;
-        $results = Product::where('name','like',"%$q%")->OrderBy('price','asc')->get();
-        return view('frontend.compare',compact('results','q'));
+        $results = Product::where('name', 'like', "%$q%")->OrderBy('price', 'asc')->get();
+        return view('frontend.compare', compact('results', 'q'));
     }
 
-public function product($id){
-    $product = Product::find($id);
-    if(!$product){
+    public function product($id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return view('frontend.404');
+        }
+        return view('frontend.product', compact('product'));
+    }
+    public function notFound()
+    {
         return view('frontend.404');
     }
-    return view('frontend.product', compact('product'));
-}
-public function notFound(){
-    return view('frontend.404');
-}
 }

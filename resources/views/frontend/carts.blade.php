@@ -39,12 +39,32 @@
                             </li>
 
                             <div class="flex justify-end gap-2">
-                                <form action="{{ route('carts.delete', $cart->id) }}" method="post">
-                                    @csrf
-                                    @method('delete')
-                                    <button type="submit"
-                                        class="bg-red-600 px-2 py-1 text-white rounded">Remove</button>
-                                </form>
+                                <div class="flex gap-2">
+                                    <div>
+                                        <form action="{{ route('carts.delete', $cart->id) }}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit"
+                                                class="bg-red-600 px-2 py-1 text-white rounded">Remove</button>
+                                        </form>
+                                    </div>
+                                    <div>
+                                        <form action="{{ route('order') }}" method="post">
+                                            @csrf
+                                            <input type="text" name="total_amount" value="{{ $totalAmt }}"
+                                                hidden>
+                                            <input type="text" name="shop_id"
+                                                value="{{ $items->first()->product->shop->id }}" hidden>
+
+                                            <select name="payment_method" id="payment_method">
+                                                <option value="khalti">Khalti</option>
+                                                <option value="esewa">Esewa</option>
+                                            </select>
+                                            <button type="submit"
+                                                class="bg-green-600 px-2 py-1 text-white rounded">Order</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         @endforeach
                         <div class="total-amount font-bold">
@@ -75,13 +95,24 @@
                         return;
                     }
 
-                    console.log('Sending request:', {
-                        cart_id: cartId,
-                        quantity: quantity
-                    });
-                    console.log('Client-side price:', price, 'Quantity:', quantity,
-                        'Expected amount:', price * quantity);
+                    // Optimistic update: Immediately update UI
+                    const amount = price * quantity;
+                    amountDisplay.innerText = `Rs. ${amount.toFixed(2)}`;
 
+                    // Recalculate total amount for the shop
+                    let total = 0;
+                    shopContainer.querySelectorAll('.quantity-input').forEach(input => {
+                        const itemPrice = parseFloat(input.dataset.price);
+                        const itemQuantity = parseInt(input.value);
+                        total += itemPrice * itemQuantity;
+                    });
+                    totalAmountDisplay.innerText = `Total: Rs. ${total.toFixed(2)}`;
+
+                    // Store original values for rollback in case of error
+                    const originalAmount = amountDisplay.innerText;
+                    const originalTotal = totalAmountDisplay.innerText;
+
+                    // Send request to server
                     fetch("{{ route('carts.updateQuantity') }}", {
                             method: 'PUT',
                             headers: {
@@ -94,41 +125,24 @@
                             })
                         })
                         .then(response => {
-                            console.log('Response status:', response.status);
                             if (!response.ok) {
                                 throw new Error(`HTTP error! Status: ${response.status}`);
                             }
                             return response.json();
                         })
                         .then(data => {
-                            console.log('Response data:', data);
-                            if (data.status) {
-                                // Temporary fix: Use client-side calculation for individual amount
-                                const amount = price * quantity;
-                                if (isNaN(amount)) {
-                                    throw new Error('Invalid client-side amount calculation');
-                                }
-
-                                // Update individual item amount
-                                amountDisplay.innerText = `Rs. ${amount.toFixed(2)}`;
-                                console.log('Server amount:', data.amount, 'Client amount:',
-                                    amount);
-
-                                // Recalculate total amount for the shop
-                                let total = 0;
-                                shopContainer.querySelectorAll('.quantity-input').forEach(
-                                    input => {
-                                        const itemPrice = parseFloat(input.dataset.price);
-                                        const itemQuantity = parseInt(input.value);
-                                        total += itemPrice * itemQuantity;
-                                    });
-                                totalAmountDisplay.innerText = `Total: Rs. ${total.toFixed(2)}`;
-                            } else {
+                            if (!data.status) {
+                                // Revert UI on failure
+                                amountDisplay.innerText = originalAmount;
+                                totalAmountDisplay.innerText = originalTotal;
                                 alert(data.message ||
                                     'Failed to update quantity. Please try again.');
                             }
                         })
                         .catch(error => {
+                            // Revert UI on error
+                            amountDisplay.innerText = originalAmount;
+                            totalAmountDisplay.innerText = originalTotal;
                             console.error('Fetch error:', error);
                             alert('An error occurred while updating the quantity: ' + error
                                 .message);

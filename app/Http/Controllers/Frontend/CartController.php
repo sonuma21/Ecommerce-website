@@ -32,7 +32,9 @@ class CartController extends Controller
         $cart->user_id = Auth::user()->id;
         $cart->product_id = $request->product_id;
         $cart->quantity = $request->quantity;
-        $cart->amount = $product->discount > 0 ? $product->price - ($product->price * $product->discount) * $request->quantity / 100 : $product->price * $request->quantity;
+        $cart->amount = $product->discount > 0
+            ? ($product->price - ($product->price * $product->discount / 100)) * $request->quantity
+            : $product->price * $request->quantity;
         $cart->save();
 
         toast("Added to the Cart Successfully", "success");
@@ -66,8 +68,14 @@ class CartController extends Controller
     public function delete($id)
     {
         $cart = Cart::find($id);
-        $cart->delete();
-        toast("Cart Item Deleted Successfully", "success");
+
+        if ($cart) {
+            $cart->delete();
+            toast("Cart Item Deleted Successfully", "success");
+        } else {
+            toast("Cart Item Not Found", "error");
+        }
+
         return redirect()->route('carts');
     }
 }

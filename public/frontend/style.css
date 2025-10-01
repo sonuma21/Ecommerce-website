@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap');
 :root{
     --primary-color:#ff6600;
     --light-primary-color:#f7e166;
@@ -10,6 +11,13 @@
     width: 86%;
     margin: auto;
 }
+
+.lobster{
+  font-family: "Lobster", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 
 body{
     color: var(--text-color);
